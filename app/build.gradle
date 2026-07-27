@@ -1,0 +1,31 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.swadiaking.androidtemplate' // Changed to your custom package
+    compileSdk 37                // Simplified standard syntax
+
+    defaultConfig {
+        applicationId "com.swadiaking.androidtemplate" // Changed to your custom package
+        minSdk 21                        // Raised slightly to run modern TextView setups smoothly
+        targetSdk 37
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false // Turned off for easy "Hello World" debugging
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 // Updated for clean Java compiling
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // Keep it empty for your basic Hello World app
+}

@@ -1,23 +1,24 @@
-<manifest xmlns:android="http://android.com">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application 
+    <application
         android:label="Hello World App"
-        android:theme="@style/Theme.TestApp">
-        
-        <!-- Crucial: android:name must point exactly to your Java file -->
-        <activity 
-            android:name=".MainActivity" 
+        android:theme="@android:style/Theme.DeviceDefault">
+
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
-                <!-- Crucial: android:name specifies the launcher action -->
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-    </application>
-</manifest>
 
+        </activity>
+
+    </application>
+
+</manifest>
 <!--<manifest xmlns:android="http://android.com"
     package="com.swadiaking.androidtemplate">
     <application 

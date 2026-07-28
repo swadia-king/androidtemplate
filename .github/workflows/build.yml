@@ -8,24 +8,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout project code
-      uses: actions/checkout@v4
+      - name: Checkout project code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'gradle'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Create Release and Upload APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          FILE="app/build/outputs/apk/debug/app-debug.apk"
+          TAG="v$(date +%Y%m%d-%H%M%S)-${GITHUB_RUN_ID}"
+
+          echo "Creating release: $TAG"
+          echo "Uploading APK: $FILE"
+
+          if [ ! -f "$FILE" ]; then
+            echo "APK not found: $FILE"
+            exit 1
+          fi
+
+          # Skip if release already exists
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release already exists, skipping..."
+            exit 0
+          fi
+
+          gh release create "$TAG" "$FILE" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Debug APK $TAG" \
+            --notes "Automatically generated debug APK from GitHub Actions." \
+            --latest
